@@ -45,9 +45,61 @@ export default {
         submitForm() {
             this.$refs.login.validate(valid => {
                 if (valid) {
-                    this.$message.success('登录成功');
-                    localStorage.setItem('ms_username', this.param.username);
-                    this.$router.push('/');
+                    // this.$ajax.post('http://localhost:8081/PreInsure/do/login', this.form())
+                    //     .then(res => {
+                    //         // console.log(res.data)
+                    //         if (res.data.code == 200) {
+                    //             // this.$store.commit('SET_TOKEN', this.loginForm.username)
+                    //             // this.$store.commit('GET_USER', this.loginForm)
+                    //             // // console.log(this.$store)
+                    //             // this.$http.get('/api/perm/2/')
+                    //             //     .then(res => {
+                    //             //         this.$store.commit('BTNS', res.data.data)
+                    //             //     })
+                    //             // this.getSelection()
+                    //             // this.$message({
+                    //             //     message: '登陆成功',
+                    //             //     type: 'success',
+                    //             //     customClass: 'zZindex',
+                    //             //     duration: 1000
+                    //             // })
+                    //             this.$message.success('登录成功');
+                    //             localStorage.setItem('ms_username', this.param.username);
+                    //             this.$router.push('/');
+                    //         } else {
+                    //             this.$message({
+                    //                 message: res.data.message,
+                    //                 type: 'error',
+                    //                 customClass: 'zZindex'
+                    //             })
+                    //         }
+                    //     })
+                    //     .catch(err => {
+                    //         console.log(err)
+                    //     })
+
+                    this.$http.post('/loginj',
+                        {
+                            'userName': this.param.username,
+                            'password': this.param.password
+                        },
+                        {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Access-Control-Allow-Origin': 'http://localhost:8080/t'
+                            }
+                        }).then((res) => {
+                        const { data, status } = res;
+                        if (data.code == 0) {
+
+                            var resJ = data.data.jarray;
+                            this.$message.success(resJ[1].mess);
+                            localStorage.setItem('ms_username', this.param.username);
+                            this.$router.push('/');
+                        } else {
+                            this.$message.error('登录失败');
+                        }
+                    });
                 } else {
                     this.$message.error('请输入账号和密码');
                     console.log('error submit!!');
